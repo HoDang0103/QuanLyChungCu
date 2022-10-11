@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities;
@@ -21,6 +22,8 @@ namespace Framework.Authorization.Users.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
+        public string FullName { get; set; }
+
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
@@ -33,8 +36,18 @@ namespace Framework.Authorization.Users.Dto
         [StringLength(UserConsts.MaxPhoneNumberLength)]
         public string PhoneNumber { get; set; }
 
+        [Required]
+        [MaxLength(UserConsts.MaxGenderLength)]
+        public string Gender { get; set; }
+
+        [Required]
+        [MaxLength(UserConsts.MaxIDNumberLength)]
+        public string IDNumber { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
         // Not used "Required" attribute since empty value is used to 'not change password'
-        [StringLength(AbpUserBase.MaxPlainPasswordLength)]
+        [StringLength(20, MinimumLength = 6)]
         [DisableAuditing]
         public string Password { get; set; }
 
