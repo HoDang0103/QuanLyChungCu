@@ -1543,6 +1543,9 @@ namespace Framework.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasMaxLength(128)
@@ -1569,8 +1572,18 @@ namespace Framework.Migrations
                         .HasMaxLength(328)
                         .HasColumnType("nvarchar(328)");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
                     b.Property<string>("GoogleAuthenticatorKey")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IDNumber")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");

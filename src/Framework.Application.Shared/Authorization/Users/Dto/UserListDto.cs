@@ -18,6 +18,12 @@ namespace Framework.Authorization.Users.Dto
 
         public string PhoneNumber { get; set; }
 
+        public string Gender { get; set; }
+
+        public string IDNumber { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
         public Guid? ProfilePictureId { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
