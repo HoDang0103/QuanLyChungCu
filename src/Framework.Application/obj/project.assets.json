@@ -3725,6 +3725,7 @@
           "Abp.Zero.Ldap": "6.3.0",
           "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore": "6.3.0",
           "Castle.Windsor.MsDependencyInjection": "3.4.0",
+          "Framework.Application.Shared": "10.3.0",
           "Framework.Core.Shared": "10.3.0",
           "Microsoft.Extensions.Configuration.AzureKeyVault": "3.1.12",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
@@ -10763,11 +10764,11 @@
   "project": {
     "version": "10.3.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Application\\Framework.Application.csproj",
+      "projectUniqueName": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Application\\Framework.Application.csproj",
       "projectName": "Framework.Application",
-      "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Application\\Framework.Application.csproj",
+      "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Application\\Framework.Application.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Application\\obj\\",
+      "outputPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10789,14 +10790,14 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Application.Shared\\Framework.Application.Shared.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Application.Shared\\Framework.Application.Shared.csproj"
+            "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Application.Shared\\Framework.Application.Shared.csproj": {
+              "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Application.Shared\\Framework.Application.Shared.csproj"
             },
-            "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj"
+            "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj": {
+              "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj"
             },
-            "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj"
+            "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj": {
+              "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj"
             }
           }
         }

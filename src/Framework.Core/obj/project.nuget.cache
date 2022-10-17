@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dIiL+kSFoSCTCSi87JJsrxr6oBGOjMVCDliCjfZfrxsUmhCtcejL6jZU/lOltYZQFfroe17v1937jDURxc1Nsw==",
+  "dgSpecHash": "a31bupVycWE8J6JxuhHa82AeV2M0AoyXtqI5+zprKg8PE7ZJ2EFYdE05K4SbUlstFVj6ZvxawIEkZtPdOs3bsg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj",
+  "projectFilePath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Core\\Framework.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\abp\\6.3.0\\abp.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.aspnetzerocore\\3.0.0\\abp.aspnetzerocore.3.0.0.nupkg.sha512",
@@ -10,7 +10,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\abp.entityframework.common\\6.3.0\\abp.entityframework.common.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.entityframeworkcore\\6.3.0\\abp.entityframeworkcore.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.mailkit\\6.3.0\\abp.mailkit.6.3.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\abp.web.common\\6.0.0\\abp.web.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\abp.web.common\\6.3.0\\abp.web.common.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.zero.common\\6.3.0\\abp.zero.common.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.zero.ldap\\6.3.0\\abp.zero.ldap.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.zerocore\\6.3.0\\abp.zerocore.6.3.0.nupkg.sha512",
@@ -82,7 +82,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\nito.asyncex.tasks\\5.1.0\\nito.asyncex.tasks.5.1.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\nito.collections.deque\\1.1.0\\nito.collections.deque.1.1.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\nito.disposables\\2.2.0\\nito.disposables.2.2.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\nuglify\\1.9.11\\nuglify.1.9.11.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\nuglify\\1.13.3\\nuglify.1.13.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\paypalcheckoutsdk\\1.0.3\\paypalcheckoutsdk.1.0.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\paypalhttp\\1.0.0\\paypalhttp.1.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\portable.bouncycastle\\1.8.8\\portable.bouncycastle.1.8.8.nupkg.sha512",

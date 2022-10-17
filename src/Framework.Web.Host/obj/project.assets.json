@@ -5360,6 +5360,7 @@
           "Abp.Zero.Ldap": "6.3.0",
           "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore": "6.3.0",
           "Castle.Windsor.MsDependencyInjection": "3.4.0",
+          "Framework.Application.Shared": "10.3.0",
           "Framework.Core.Shared": "10.3.0",
           "Microsoft.Extensions.Configuration.AzureKeyVault": "3.1.12",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
@@ -14323,11 +14324,11 @@
   "project": {
     "version": "10.3.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Web.Host\\Framework.Web.Host.csproj",
+      "projectUniqueName": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Web.Host\\Framework.Web.Host.csproj",
       "projectName": "Framework.Web.Host",
-      "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Web.Host\\Framework.Web.Host.csproj",
+      "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Web.Host\\Framework.Web.Host.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Web.Host\\obj\\",
+      "outputPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Web.Host\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -14349,8 +14350,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Web.Core\\Framework.Web.Core.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Web.Core\\Framework.Web.Core.csproj"
+            "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Web.Core\\Framework.Web.Core.csproj": {
+              "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Web.Core\\Framework.Web.Core.csproj"
             }
           }
         }

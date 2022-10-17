@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4bl58sfPCB/4Emz8kBBPWrFn5KZy+MB6RgKRITUztsUnMPr4HcjSMlYsq00FLy4aaguMxZFqX6UxsHtcWg+cjw==",
+  "dgSpecHash": "ZrifRskfyh7jKhdtAYQ9tLMYH4WeYGJXuTshWVpQ7A2InrZOo4btAFob0oh2VU1Y7KNnM6IgWeclHRWZClwOoQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.GraphQL\\Framework.GraphQL.csproj",
+  "projectFilePath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.GraphQL\\Framework.GraphQL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\abp\\6.3.0\\abp.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.aspnetzerocore\\3.0.0\\abp.aspnetzerocore.3.0.0.nupkg.sha512",

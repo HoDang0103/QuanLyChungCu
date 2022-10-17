@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
@@ -20,6 +21,10 @@ namespace Framework.Authorization.Users
         [Required]
         [MaxLength(UserConsts.MaxIDNumberLength)]
         public virtual string IDNumber { get; set; }
+
+        // override FullName, change it into vietnamese FullName
+        [NotMapped]
+        public override string FullName { get { return this.Surname + " " + this.Name; } }
 
         [Required]
         public virtual DateTime BirthDate { get; set; }

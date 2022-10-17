@@ -5,6 +5,9 @@ namespace Framework.Authorization.Users
 {
     public interface IUserEmailer
     {
+        // Send email activation OTP to user's email address
+        Task SendEmailActivationOTPAsync(User user, string plainPassword = null);
+
         /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>

@@ -13,3 +13,20 @@ C:\Users\Admin\Source\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framewor
 C:\Users\Admin\Source\Repos\backend\src\Framework.Core\obj\Debug\net5.0\refint\Framework.Core.dll
 C:\Users\Admin\Source\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.pdb
 C:\Users\Admin\Source\Repos\backend\src\Framework.Core\obj\Debug\net5.0\ref\Framework.Core.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Core.deps.json
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Core.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Core.pdb
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Application.Shared.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Core.Shared.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Application.Shared.pdb
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\bin\Debug\net5.0\Framework.Core.Shared.pdb
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.csproj.AssemblyReference.cache
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.AssemblyInfoInputs.cache
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.AssemblyInfo.cs
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.csproj.CoreCompileInputs.cache
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.csproj.CopyComplete
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\refint\Framework.Core.dll
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\Framework.Core.pdb
+C:\LoTriThong\Studying\SE214 Projects\Repos\backend\src\Framework.Core\obj\Debug\net5.0\ref\Framework.Core.dll

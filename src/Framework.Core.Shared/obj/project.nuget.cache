@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dLyCj7Ts1nWODUDIUV29EfU5LwzLL5l5QspcIljxeN4IfG0aLlw1H5LUM0UaDShbz0cZPlQs9Ue66LTNqH4NyA==",
+  "dgSpecHash": "XvsLRCzZrvsnmWSkTi71KpqiRZQcSf2iHV2biHCKy6RwnbvRHuGxGwus4abfujcmxsD+nVvFsRFAIW2XFVGsUQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Core.Shared\\Framework.Core.Shared.csproj",
+  "projectFilePath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Core.Shared\\Framework.Core.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\abp\\6.3.0\\abp.6.3.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\abp.zero.common\\6.3.0\\abp.zero.common.6.3.0.nupkg.sha512",

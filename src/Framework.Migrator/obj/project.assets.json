@@ -146,20 +146,21 @@
           }
         }
       },
-      "Abp.Web.Common/6.0.0": {
+      "Abp.Web.Common/6.3.0": {
         "type": "package",
         "dependencies": {
-          "Abp": "6.0.0",
-          "NUglify": "1.9.11"
+          "Abp": "6.3.0",
+          "ConfigureAwait.Fody": "3.3.1",
+          "NUglify": "1.13.3"
         },
         "compile": {
           "lib/netstandard2.0/Abp.Web.Common.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
           "lib/netstandard2.0/Abp.Web.Common.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -1540,7 +1541,7 @@
           }
         }
       },
-      "NUglify/1.9.11": {
+      "NUglify/1.13.3": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/NUglify.dll": {
@@ -3759,6 +3760,21 @@
           }
         }
       },
+      "Framework.Application.Shared/10.3.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "Abp.Web.Common": "6.3.0",
+          "Framework.Core.Shared": "10.3.0",
+          "System.ComponentModel.Annotations": "5.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Framework.Application.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Framework.Application.Shared.dll": {}
+        }
+      },
       "Framework.Core/10.3.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
@@ -3769,6 +3785,7 @@
           "Abp.Zero.Ldap": "6.3.0",
           "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore": "6.3.0",
           "Castle.Windsor.MsDependencyInjection": "3.4.0",
+          "Framework.Application.Shared": "10.3.0",
           "Framework.Core.Shared": "10.3.0",
           "Microsoft.Extensions.Configuration.AzureKeyVault": "3.1.12",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
@@ -3914,16 +3931,17 @@
         "lib/netstandard2.0/Abp.MailKit.xml"
       ]
     },
-    "Abp.Web.Common/6.0.0": {
-      "sha512": "GcR44uU5L9C65aFUDZJUpifEp6wXKnMr4lJn/hxeRTbwc3jEcX9rj0vRjMzJbmNJCW7vHkJ3VXmdKZq3mQJ6qQ==",
+    "Abp.Web.Common/6.3.0": {
+      "sha512": "x5BTzxh2Qhzg/eOhjaiKcQ5V8E3coSNfl4GmDSAt5rearZnyV8RsxJ/vqdoAEerp6+1wlWL3ErujVdFDBCMGqg==",
       "type": "package",
-      "path": "abp.web.common/6.0.0",
+      "path": "abp.web.common/6.3.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "abp.web.common.6.0.0.nupkg.sha512",
+        "abp.web.common.6.3.0.nupkg.sha512",
         "abp.web.common.nuspec",
         "lib/netstandard2.0/Abp.Web.Common.dll",
+        "lib/netstandard2.0/Abp.Web.Common.pdb",
         "lib/netstandard2.0/Abp.Web.Common.xml"
       ]
     },
@@ -5585,10 +5603,10 @@
         "nito.disposables.nuspec"
       ]
     },
-    "NUglify/1.9.11": {
-      "sha512": "p/TNPrStsZgbvB0iFxoLhRVkzUtbbkvySwncVDy214oZvwoiteU32uBd6tHfv8r7VRBDgK/roa6h8GpiVb+V9g==",
+    "NUglify/1.13.3": {
+      "sha512": "rerZTcQPYlfWXoKViqxqLETN+WmjWP1Br+/GpGsZk9t/k5eKRTrWyWWSrpAI2+pbHDcc6EusyNfRdDnf7/HTYg==",
       "type": "package",
-      "path": "nuglify/1.9.11",
+      "path": "nuglify/1.13.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5600,8 +5618,9 @@
         "lib/netstandard1.3/NUglify.xml",
         "lib/netstandard2.0/NUglify.dll",
         "lib/netstandard2.0/NUglify.xml",
-        "nuglify.1.9.11.nupkg.sha512",
-        "nuglify.nuspec"
+        "nuglify.1.13.3.nupkg.sha512",
+        "nuglify.nuspec",
+        "nuglify.png"
       ]
     },
     "PayPalCheckoutSdk/1.0.3": {
@@ -10891,6 +10910,11 @@
         "twilio.nuspec"
       ]
     },
+    "Framework.Application.Shared/10.3.0": {
+      "type": "project",
+      "path": "../Framework.Application.Shared/Framework.Application.Shared.csproj",
+      "msbuildProject": "../Framework.Application.Shared/Framework.Application.Shared.csproj"
+    },
     "Framework.Core/10.3.0": {
       "type": "project",
       "path": "../Framework.Core/Framework.Core.csproj",
@@ -10922,11 +10946,11 @@
   "project": {
     "version": "10.3.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Migrator\\Framework.Migrator.csproj",
+      "projectUniqueName": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Migrator\\Framework.Migrator.csproj",
       "projectName": "Framework.Migrator",
-      "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Migrator\\Framework.Migrator.csproj",
+      "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Migrator\\Framework.Migrator.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.Migrator\\obj\\",
+      "outputPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.Migrator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10948,8 +10972,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj"
+            "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj": {
+              "projectPath": "C:\\LoTriThong\\Studying\\SE214 Projects\\Repos\\backend\\src\\Framework.EntityFrameworkCore\\Framework.EntityFrameworkCore.csproj"
             }
           }
         }
