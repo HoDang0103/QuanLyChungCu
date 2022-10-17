@@ -20,8 +20,20 @@ namespace Framework.Web.Models.Account
         [StringLength(User.MaxSurnameLength)]
         public string Surname { get; set; }
 
+        [StringLength(User.MaxNameLength + User.MaxSurnameLength)]
+        public string FullName { get; set; }
+
+
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
+
+        [MaxLength(UserConsts.MaxGenderLength)]
+        public string Gender { get; set; }
+
+        [MaxLength(UserConsts.MaxIDNumberLength)]
+        public string IDNumber { get; set; }
+
+        public DateTime BirthDate { get; set; }
 
         [Required]
         [EmailAddress]

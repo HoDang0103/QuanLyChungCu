@@ -14,17 +14,16 @@ namespace Framework.Authorization.Users.Dto
         /// </summary>
         public long? Id { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
+        [Required]
+        [StringLength(AbpUserBase.MaxSurnameLength + AbpUserBase.MaxNameLength)]
         public string FullName { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
 
@@ -44,10 +43,11 @@ namespace Framework.Authorization.Users.Dto
         [MaxLength(UserConsts.MaxIDNumberLength)]
         public string IDNumber { get; set; }
 
+        [Required]
         public DateTime BirthDate { get; set; }
 
         // Not used "Required" attribute since empty value is used to 'not change password'
-        [StringLength(20, MinimumLength = 6)]
+        [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         [DisableAuditing]
         public string Password { get; set; }
 

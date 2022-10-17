@@ -49,6 +49,7 @@ using Framework.Web.Authentication.External;
 using Framework.Web.Security.Recaptcha;
 using Framework.Web.Session;
 using Framework.Web.Views.Shared.Components.TenantChange;
+using Microsoft.VisualBasic;
 
 namespace Framework.Web.Controllers
 {
@@ -468,13 +469,15 @@ namespace Framework.Web.Controllers
                 }
 
                 var user = await _userRegistrationManager.RegisterAsync(
-                    model.Name,
-                    model.Surname,
                     model.EmailAddress,
-                    model.UserName,
                     model.Password,
+                    model.Surname + " " + model.Name,
+                    "Male",         //
+                    "Unknown",      // cái này chưa kiểu nên set mặc định vầy luôn
+                    DateTime.Now,   //
                     false,
-                    _appUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
+                    _appUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                    ClientType.WEB  //
                 );
 
                 //Getting tenant-specific settings

@@ -15,6 +15,8 @@ using Framework.Configuration;
 using Framework.Debugging;
 using Framework.MultiTenancy;
 using Framework.Notifications;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Framework.Authorization.Accounts.Dto;
 
 namespace Framework.Authorization.Users
 {
@@ -30,7 +32,7 @@ namespace Framework.Authorization.Users
         private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly IAppNotifier _appNotifier;
         private readonly IUserPolicy _userPolicy;
-        
+
 
         public UserRegistrationManager(
             TenantManager tenantManager,
@@ -53,7 +55,16 @@ namespace Framework.Authorization.Users
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed, string emailActivationLink)
+        public async Task<User> RegisterAsync(
+            string emailAddress,
+            string plainPassword,
+            string fullName,
+            string gender,
+            string idNumber,
+            DateTime birthDate,
+            bool isEmailConfirmed,
+            string emailActivationString,
+            ClientType clientType)
         {
             CheckForTenant();
             CheckSelfRegistrationIsEnabled();
@@ -63,16 +74,35 @@ namespace Framework.Authorization.Users
 
             await _userPolicy.CheckMaxUserCountAsync(tenant.Id);
 
+            // splitting fullname to surname + name (vietnamese format)
+            string[] fullNameSplitted = fullName.Split(" ");
+            int nameIndex = fullNameSplitted.Length - 1;
+            string name = CapitalizeName(fullNameSplitted[nameIndex]);
+            string surname = CapitalizeName(fullName.Substring(0, fullName.Length - fullNameSplitted[nameIndex].Length));
+
             var user = new User
             {
                 TenantId = tenant.Id,
                 Name = name,
                 Surname = surname,
                 EmailAddress = emailAddress,
-                IsActive = isNewRegisteredUserActiveByDefault,
-                UserName = userName,
+                UserName = emailAddress,
                 IsEmailConfirmed = isEmailConfirmed,
-                Roles = new List<UserRole>()
+                Roles = new List<UserRole>(),
+                Gender = gender,
+                IDNumber = idNumber,
+                BirthDate = birthDate,
+            };
+
+            if (clientType == ClientType.WEB)
+            {
+                user.IsActive = isNewRegisteredUserActiveByDefault;
+                user.EmailConfirmationCode = emailActivationString;
+            }
+            else // (clientType == ClientType.MOBILE)
+            {
+                user.IsActive = isNewRegisteredUserActiveByDefault;
+                user.EmailConfirmationCode = emailActivationString;
             };
 
             user.SetNormalizedNames();
@@ -87,17 +117,17 @@ namespace Framework.Authorization.Users
             CheckErrors(await _userManager.CreateAsync(user, plainPassword));
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            if (!user.IsEmailConfirmed)
+            /*  To send Email activation link if needed */
+            if (!user.IsEmailConfirmed && clientType == ClientType.WEB)
             {
                 user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, emailActivationLink);
+                await _userEmailer.SendEmailActivationLinkAsync(user, emailActivationString);
             }
 
             //Notifications
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
             await _appNotifier.WelcomeToTheApplicationAsync(user);
             await _appNotifier.NewUserRegisteredAsync(user);
-
             return user;
         }
 
@@ -151,6 +181,27 @@ namespace Framework.Authorization.Users
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
+        }
+
+        private string CapitalizeName(string name)
+        {
+            string[] nameSplitted = name.Trim().Split(" ");
+
+            if (nameSplitted.Length < 2)
+            {
+                return name.Substring(0, 1).ToUpper() + name.Substring(1).ToLower();
+            }
+            else
+            {
+                name = "";
+
+                foreach (string word in nameSplitted)
+                {
+                    name += word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower() + " ";
+                }
+
+                return name.Trim();
+            }
         }
     }
 }

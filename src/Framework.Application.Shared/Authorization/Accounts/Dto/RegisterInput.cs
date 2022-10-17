@@ -4,21 +4,31 @@ using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Extensions;
+using Framework.Authorization.Users;
 using Framework.Validation;
 
 namespace Framework.Authorization.Accounts.Dto
 {
+    public enum ClientType
+    { 
+        WEB, MOBILE
+    }
     public class RegisterInput : IValidatableObject
     {
         [Required]
+        public ClientType ClientType { get; set; }
+        public string OTP { get; set; }
+
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
         [Required]
+        [StringLength(AbpUserBase.MaxNameLength + AbpUserBase.MaxSurnameLength)]
+        public string FullName { get; set; }
+
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
 
@@ -26,6 +36,20 @@ namespace Framework.Authorization.Accounts.Dto
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
+
+        [StringLength(UserConsts.MaxPhoneNumberLength)]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        [MaxLength(UserConsts.MaxGenderLength)]
+        public string Gender { get; set; }
+
+        [Required]
+        [MaxLength(UserConsts.MaxIDNumberLength)]
+        public string IDNumber { get; set; }
+
+        [Required]
+        public DateTime BirthDate { get; set; }
 
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]

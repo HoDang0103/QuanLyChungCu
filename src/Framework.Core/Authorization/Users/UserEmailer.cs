@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Abp.Authorization.Users;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -20,6 +19,11 @@ using Abp.Runtime.Security;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Framework.Net.Emailing;
+using static Abp.Net.Mail.EmailSettingNames;
+using Abp.Net.Mail.Smtp;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using MailKit.Security;
+using MimeKit;
 
 namespace Framework.Authorization.Users
 {
@@ -65,6 +69,24 @@ namespace Framework.Authorization.Users
             _abpSession = abpSession;
         }
 
+        public virtual async Task SendEmailActivationOTPAsync(User user, string plainPassword = null)
+        {
+            await CheckMailSettingsEmptyOrNull();
+
+            if (user.EmailConfirmationCode.IsNullOrEmpty())
+            {
+                throw new Exception("EmailConfirmationCode should be set in order to send email activation link.");
+            }
+
+            var subject = "Hey, check this!";
+            var mailBody = new StringBuilder();
+
+            mailBody.AppendLine("Hi, " + user.FullName + "<br>");
+            mailBody.AppendLine("Here is you email activation OTP: <b>" + SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode) + "</b>");
+
+            await SendEmail(user.EmailAddress, subject, mailBody);
+        }
+
         /// <summary>
         /// Send email activation link to user's email address.
         /// </summary>
@@ -77,7 +99,7 @@ namespace Framework.Authorization.Users
         public virtual async Task SendEmailActivationLinkAsync(User user, string link, string plainPassword = null)
         {
             await CheckMailSettingsEmptyOrNull();
-            
+
             if (user.EmailConfirmationCode.IsNullOrEmpty())
             {
                 throw new Exception("EmailConfirmationCode should be set in order to send email activation link.");
@@ -97,7 +119,7 @@ namespace Framework.Authorization.Users
             var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("EmailActivation_Title"), L("EmailActivation_SubTitle"));
             var mailMessage = new StringBuilder();
 
-            mailMessage.AppendLine("<b>" + L("NameSurname") + "</b>: " + user.Name + " " + user.Surname + "<br />");
+            mailMessage.AppendLine("<b>" + L("NameSurname") + "</b>: " + user.Surname + " " + user.Name + "<br />");
 
             if (!tenancyName.IsNullOrEmpty())
             {
@@ -131,7 +153,7 @@ namespace Framework.Authorization.Users
         public async Task SendPasswordResetLinkAsync(User user, string link = null)
         {
             await CheckMailSettingsEmptyOrNull();
-            
+
             if (user.PasswordResetCode.IsNullOrEmpty())
             {
                 throw new Exception("PasswordResetCode should be set in order to send password reset link.");
@@ -181,7 +203,7 @@ namespace Framework.Authorization.Users
             try
             {
                 await CheckMailSettingsEmptyOrNull();
-                
+
                 var emailTemplate = GetTitleAndSubTitle(user.TenantId, L("NewChatMessageEmail_Title"), L("NewChatMessageEmail_SubTitle"));
                 var mailMessage = new StringBuilder();
 
@@ -207,7 +229,7 @@ namespace Framework.Authorization.Users
                     using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
                         await CheckMailSettingsEmptyOrNull();
-                        
+
                         var tenantAdmin = await _userManager.GetAdminAsync();
                         if (tenantAdmin == null || string.IsNullOrEmpty(tenantAdmin.EmailAddress))
                         {
@@ -241,7 +263,7 @@ namespace Framework.Authorization.Users
                     using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
                         await CheckMailSettingsEmptyOrNull();
-                        
+
                         var tenantAdmin = await _userManager.GetAdminAsync();
                         if (tenantAdmin == null || string.IsNullOrEmpty(tenantAdmin.EmailAddress))
                         {
@@ -272,7 +294,7 @@ namespace Framework.Authorization.Users
             try
             {
                 await CheckMailSettingsEmptyOrNull();
-                
+
                 var hostAdmin = await _userManager.GetAdminAsync();
                 if (hostAdmin == null || string.IsNullOrEmpty(hostAdmin.EmailAddress))
                 {
@@ -304,7 +326,7 @@ namespace Framework.Authorization.Users
                     using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
                         await CheckMailSettingsEmptyOrNull();
-                        
+
                         var tenantAdmin = await _userManager.GetAdminAsync();
                         if (tenantAdmin == null || string.IsNullOrEmpty(tenantAdmin.EmailAddress))
                         {
@@ -355,13 +377,43 @@ namespace Framework.Authorization.Users
         private async Task ReplaceBodyAndSend(string emailAddress, string subject, StringBuilder emailTemplate, StringBuilder mailMessage)
         {
             emailTemplate.Replace("{EMAIL_BODY}", mailMessage.ToString());
-            await _emailSender.SendAsync(new MailMessage
+            await SendEmail(emailAddress, subject, emailTemplate);
+        }
+
+        private async Task SendEmail(string receiverEmailAddress, string subject, StringBuilder mailBody)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(
+                await SettingManager.GetSettingValueAsync(DefaultFromDisplayName),
+                await SettingManager.GetSettingValueAsync(DefaultFromAddress)
+                ));
+            message.To.Add(new MailboxAddress("", receiverEmailAddress));
+            message.Subject = subject;
+            message.Body = new TextPart("html")
             {
-                To = { emailAddress },
-                Subject = subject,
-                Body = emailTemplate.ToString(),
-                IsBodyHtml = true
-            });
+                Text = mailBody.ToString()
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect(
+                    await SettingManager.GetSettingValueAsync(Smtp.Host),
+                    await SettingManager.GetSettingValueAsync<int>(Smtp.Port),
+                    SecureSocketOptions.StartTls
+                    );
+
+                //var smtpPassword = await SettingManager.GetSettingValueAsync(Smtp.Password);
+
+                client.Authenticate(
+                    await SettingManager.GetSettingValueAsync(Smtp.UserName),
+                    //SimpleStringCipher.Instance.Decrypt(smtpPassword)
+                    "025493450"
+                    );
+
+                client.Send(message);
+
+                client.Disconnect(true);
+            }
         }
 
         /// <summary>
@@ -395,12 +447,12 @@ namespace Framework.Authorization.Users
             {
                 throw new UserFriendlyException(L("SMTPSettingsNotProvidedWarningText"));
             }
-            
+
             if ((await _settingManager.GetSettingValueAsync<bool>(EmailSettingNames.Smtp.UseDefaultCredentials)))
             {
                 return;
             }
-            
+
             if (
                 (await _settingManager.GetSettingValueAsync(EmailSettingNames.Smtp.UserName)).IsNullOrEmpty() ||
                 (await _settingManager.GetSettingValueAsync(EmailSettingNames.Smtp.Password)).IsNullOrEmpty()

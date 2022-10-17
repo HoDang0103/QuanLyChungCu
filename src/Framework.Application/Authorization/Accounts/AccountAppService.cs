@@ -19,7 +19,8 @@ using Framework.Security.Recaptcha;
 using Framework.Url;
 using Framework.Authorization.Delegation;
 using Abp.Domain.Repositories;
-
+using Abp.Net.Mail;
+using static System.Net.WebRequestMethods;
 
 namespace Framework.Authorization.Accounts
 {
@@ -43,7 +44,7 @@ namespace Framework.Authorization.Accounts
             IImpersonationManager impersonationManager,
             IUserLinkManager userLinkManager,
             IPasswordHasher<User> passwordHasher,
-            IWebUrlService webUrlService, 
+            IWebUrlService webUrlService,
             IUserDelegationManager userDelegationManager)
         {
             _userEmailer = userEmailer;
@@ -93,6 +94,39 @@ namespace Framework.Authorization.Accounts
             return Task.FromResult(tenantId);
         }
 
+        public async Task SendEmailActivationOTP(RegisterInput input)
+        {
+            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+
+            if (user == null)
+            {
+                user = await _userRegistrationManager.RegisterAsync(
+                    input.EmailAddress,
+                    input.Password,
+                    input.FullName,
+                    input.Gender,
+                    input.IDNumber,
+                    input.BirthDate,
+                    false,
+                    GenerateOTP(),
+                    ClientType.MOBILE
+                );
+            }
+            else
+            {
+                user.EmailConfirmationCode = GenerateOTP();
+            }
+
+            await _userEmailer.SendEmailActivationOTPAsync(user);
+        }
+
+        public async Task<string> MessageFromServerSide(RegisterInput input)
+        {
+            // some codes
+
+            return "Currently Nothing";
+        }
+
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             if (UseCaptchaOnRegistration())
@@ -100,22 +134,47 @@ namespace Framework.Authorization.Accounts
                 await RecaptchaValidator.ValidateAsync(input.CaptchaResponse);
             }
 
-            var user = await _userRegistrationManager.RegisterAsync(
-                input.Name,
-                input.Surname,
-                input.EmailAddress,
-                input.UserName,
-                input.Password,
-                false,
-                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
-            );
-
-            var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
-
-            return new RegisterOutput
+            if (input.ClientType == ClientType.WEB)
             {
-                CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
-            };
+                var user = await _userRegistrationManager.RegisterAsync(
+                    input.EmailAddress,
+                    input.Password,
+                    input.FullName,
+                    input.Gender,
+                    input.IDNumber,
+                    input.BirthDate,
+                    false,
+                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                    input.ClientType
+                );
+
+                var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+
+                return new RegisterOutput
+                {
+                    CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
+                };
+            }
+            else // (input.ClientType == ClientType.MOBILE)
+            {
+                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+                var output = new RegisterOutput { CanLogin = false };
+
+                if (user != null)
+                {
+                    if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
+                    {
+                        output.CanLogin = true;
+                        user.IsActive = true;
+                        user.IsEmailConfirmed = true;
+                        user.EmailConfirmationCode = null;
+
+                        await UserManager.UpdateAsync(user);
+                    }
+                }
+
+                return output;
+            }
         }
 
         public async Task SendPasswordResetCode(SendPasswordResetCodeInput input)
@@ -263,6 +322,13 @@ namespace Framework.Authorization.Accounts
             }
 
             return user;
+        }
+
+        private string GenerateOTP()
+        {
+            // generate a random 6-digit otp
+            Random _r = new Random();
+            return SimpleStringCipher.Instance.Encrypt(_r.Next(100000, 1000000).ToString());
         }
     }
 }
