@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Extensions;
@@ -12,6 +13,18 @@ namespace Framework.Authorization.Users
     /// </summary>
     public class User : AbpUser<User>
     {
+        [Required]
+        [MaxLength(UserConsts.MaxGenderLength)]
+        public virtual string Gender { get; set; }
+
+        [Required]
+        [MaxLength(UserConsts.MaxIDNumberLength)]
+        public virtual string IDNumber { get; set; }
+
+        [Required]
+        public virtual DateTime BirthDate { get; set; }
+
+        /*----- Default -----*/
         public virtual Guid? ProfilePictureId { get; set; }
 
         public virtual bool ShouldChangePasswordOnNextLogin { get; set; }
