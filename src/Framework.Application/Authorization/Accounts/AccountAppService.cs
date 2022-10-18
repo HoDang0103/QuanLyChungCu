@@ -289,7 +289,8 @@ namespace Framework.Authorization.Accounts
 
         private bool UseCaptchaOnRegistration()
         {
-            return SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration);
+            //return SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration);
+            return false;   // set false luôn khỏi setting cái gì hết
         }
 
         private async Task<Tenant> GetActiveTenantAsync(int tenantId)
