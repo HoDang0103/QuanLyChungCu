@@ -13,6 +13,7 @@ using Framework.Authorization.Roles;
 using Framework.Authorization.Users;
 using Framework.EntityFrameworkCore;
 using Framework.Notifications;
+using System;
 
 namespace Framework.Migrations.Seed.Tenants
 {
@@ -62,6 +63,10 @@ namespace Framework.Migrations.Seed.Tenants
                 adminUser.IsEmailConfirmed = true;
                 adminUser.ShouldChangePasswordOnNextLogin = false;
                 adminUser.IsActive = true;
+
+                adminUser.Gender = "Other";
+                adminUser.IDNumber = "123456789";
+                adminUser.BirthDate = DateTime.MinValue;
 
                 _context.Users.Add(adminUser);
                 _context.SaveChanges();

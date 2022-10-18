@@ -11,6 +11,7 @@ using Framework.Authorization.Roles;
 using Framework.Authorization.Users;
 using Framework.EntityFrameworkCore;
 using Framework.Notifications;
+using System;
 
 namespace Framework.Migrations.Seed.Host
 {
@@ -55,6 +56,10 @@ namespace Framework.Migrations.Seed.Host
                     ShouldChangePasswordOnNextLogin = false,
                     IsActive = true,
                     Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
+                    ,
+                    Gender = "Other",
+                    IDNumber = "123456789",
+                    BirthDate = DateTime.MinValue
                 };
 
                 user.SetNormalizedNames();
