@@ -37,6 +37,7 @@ namespace Framework.Authorization.Accounts
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IWebUrlService _webUrlService;
         private readonly IUserDelegationManager _userDelegationManager;
+        private readonly IAbpSession _session;
 
         public AccountAppService(
             IUserEmailer userEmailer,
@@ -45,7 +46,8 @@ namespace Framework.Authorization.Accounts
             IUserLinkManager userLinkManager,
             IPasswordHasher<User> passwordHasher,
             IWebUrlService webUrlService,
-            IUserDelegationManager userDelegationManager)
+            IUserDelegationManager userDelegationManager,
+            IAbpSession session)
         {
             _userEmailer = userEmailer;
             _userRegistrationManager = userRegistrationManager;
@@ -57,6 +59,7 @@ namespace Framework.Authorization.Accounts
             AppUrlService = NullAppUrlService.Instance;
             RecaptchaValidator = NullRecaptchaValidator.Instance;
             _userDelegationManager = userDelegationManager;
+            _session = session;
         }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
@@ -96,28 +99,31 @@ namespace Framework.Authorization.Accounts
 
         public async Task SendEmailActivationOTP(RegisterInput input)
         {
-            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-
-            if (user == null)
+            using (_session.Use(1, null))   // try to remove this asap
             {
-                user = await _userRegistrationManager.RegisterAsync(
-                    input.EmailAddress,
-                    input.Password,
-                    input.FullName,
-                    input.Gender,
-                    input.IDNumber,
-                    input.BirthDate,
-                    false,
-                    GenerateOTP(),
-                    ClientType.MOBILE
-                );
-            }
-            else
-            {
-                user.EmailConfirmationCode = GenerateOTP();
-            }
+                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
 
-            await _userEmailer.SendEmailActivationOTPAsync(user);
+                if (user == null)
+                {
+                    user = await _userRegistrationManager.RegisterAsync(
+                        input.EmailAddress,
+                        input.Password,
+                        input.FullName,
+                        input.Gender,
+                        input.IDNumber,
+                        input.BirthDate,
+                        false,
+                        GenerateOTP(),
+                        ClientType.MOBILE
+                    );
+                }
+                else
+                {
+                    user.EmailConfirmationCode = GenerateOTP();
+                }
+
+                await _userEmailer.SendEmailActivationOTPAsync(user);
+            }
         }
 
         public async Task<string> MessageFromServerSide(RegisterInput input)
