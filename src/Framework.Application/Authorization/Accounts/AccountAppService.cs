@@ -124,7 +124,7 @@ namespace Framework.Authorization.Accounts
         {
             // some codes
 
-            //return "Currently Nothing";
+            return "Currently Nothing";
         }
 
         public async Task<RegisterOutput> Register(RegisterInput input)
