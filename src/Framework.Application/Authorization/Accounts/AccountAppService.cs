@@ -250,6 +250,8 @@ namespace Framework.Authorization.Accounts
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
 
+            user.IsActive = true;
+
             await UserManager.UpdateAsync(user);
         }
 
