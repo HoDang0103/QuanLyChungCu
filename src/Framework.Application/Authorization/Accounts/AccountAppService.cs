@@ -99,38 +99,40 @@ namespace Framework.Authorization.Accounts
 
         public async Task SendEmailActivationOTP(RegisterInput input)
         {
-            using (_session.Use(1, null))   // try to remove this asap
+            using (CurrentUnitOfWork.SetTenantId(1))    // try to remove these asap
             {
-                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-
-                if (user == null)
+                using (_session.Use(1, null))           //
                 {
-                    user = await _userRegistrationManager.RegisterAsync(
-                        input.EmailAddress,
-                        input.Password,
-                        input.FullName,
-                        input.Gender,
-                        input.IDNumber,
-                        input.BirthDate,
-                        false,
-                        GenerateOTP(),
-                        ClientType.MOBILE
-                    );
-                }
-                else
-                {
-                    user.EmailConfirmationCode = GenerateOTP();
-                }
+                    var user = await UserManager.FindByEmailAsync(input.EmailAddress);
 
-                await _userEmailer.SendEmailActivationOTPAsync(user);
+                    if (user == null)
+                    {
+                        user = await _userRegistrationManager.RegisterAsync(
+                            input.EmailAddress,
+                            input.Password,
+                            input.FullName,
+                            input.Gender,
+                            input.IDNumber,
+                            input.BirthDate,
+                            false,
+                            GenerateOTP(),
+                            ClientType.MOBILE
+                        );
+                    }
+                    else
+                    {
+                        user.EmailConfirmationCode = GenerateOTP();
+                    }
+
+                    await _userEmailer.SendEmailActivationOTPAsync(user);
+                }
             }
         }
 
-        public async Task<string> MessageFromServerSide(RegisterInput input)
+        public async Task<string> MessageFromServerSide()
         {
-            // some codes
-
-            return "Currently Nothing";
+            string message = AbpSession.TenantId.ToString();
+            return message;
         }
 
         public async Task<RegisterOutput> Register(RegisterInput input)
@@ -163,23 +165,29 @@ namespace Framework.Authorization.Accounts
             }
             else // (input.ClientType == ClientType.MOBILE)
             {
-                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-                var output = new RegisterOutput { CanLogin = false };
-
-                if (user != null)
+                using (CurrentUnitOfWork.SetTenantId(1))    // try to remove these asap
                 {
-                    if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
+                    using (_session.Use(1, null))           //
                     {
-                        output.CanLogin = true;
-                        user.IsActive = true;
-                        user.IsEmailConfirmed = true;
-                        user.EmailConfirmationCode = null;
+                        var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+                        var output = new RegisterOutput { CanLogin = false };
 
-                        await UserManager.UpdateAsync(user);
+                        if (user != null)
+                        {
+                            if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
+                            {
+                                output.CanLogin = true;
+                                user.IsActive = true;
+                                user.IsEmailConfirmed = true;
+                                user.EmailConfirmationCode = null;
+
+                                await UserManager.UpdateAsync(user);
+                            }
+                        }
+
+                        return output;
                     }
                 }
-
-                return output;
             }
         }
 
