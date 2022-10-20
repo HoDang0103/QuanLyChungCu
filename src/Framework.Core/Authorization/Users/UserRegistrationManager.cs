@@ -75,16 +75,13 @@ namespace Framework.Authorization.Users
             await _userPolicy.CheckMaxUserCountAsync(tenant.Id);
 
             // splitting fullname to surname + name (vietnamese format)
-            string[] fullNameSplitted = fullName.Split(" ");
-            int nameIndex = fullNameSplitted.Length - 1;
-            string name = CapitalizeName(fullNameSplitted[nameIndex]);
-            string surname = CapitalizeName(fullName.Substring(0, fullName.Length - fullNameSplitted[nameIndex].Length));
+            string[] splittedFullName = SplitedFullName(fullName);
 
             var user = new User
             {
                 TenantId = tenant.Id,
-                Name = name,
-                Surname = surname,
+                Name = splittedFullName[1],
+                Surname = splittedFullName[0],
                 EmailAddress = emailAddress,
                 UserName = emailAddress,
                 IsEmailConfirmed = isEmailConfirmed,
@@ -181,6 +178,16 @@ namespace Framework.Authorization.Users
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
+        }
+
+        public string[] SplitedFullName(string fullName)
+        {
+            string[] result = fullName.Split(" ");
+            int nameIndex = result.Length - 1;
+            string name = CapitalizeName(result[nameIndex]);
+            string surname = CapitalizeName(fullName.Substring(0, fullName.Length - name.Length));
+            result = new string[2] {surname, name};
+            return result;
         }
 
         private string CapitalizeName(string name)

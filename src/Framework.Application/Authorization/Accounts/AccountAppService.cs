@@ -21,6 +21,7 @@ using Framework.Authorization.Delegation;
 using Abp.Domain.Repositories;
 using Abp.Net.Mail;
 using static System.Net.WebRequestMethods;
+using NPOI.SS.Formula.Functions;
 
 namespace Framework.Authorization.Accounts
 {
@@ -103,21 +104,19 @@ namespace Framework.Authorization.Accounts
 
             if (user == null)
             {
-                user = await _userRegistrationManager.RegisterAsync(
-                    input.EmailAddress,
-                    input.Password,
-                    input.FullName,
-                    input.Gender,
-                    input.IDNumber,
-                    input.BirthDate,
-                    false,
-                    GenerateOTP(),
-                    ClientType.MOBILE
-                );
+                user = await SaveUserDataAsync(input, true);
             }
             else
             {
-                user.EmailConfirmationCode = GenerateOTP();
+                if (user.IsActive)
+                {
+                    // notify
+                    throw new Exception("Your email has already been registed!");
+                }
+                else
+                {
+                    user.EmailConfirmationCode = GenerateOTP();
+                }
             }
 
             await _userEmailer.SendEmailActivationOTPAsync(user);
@@ -138,17 +137,7 @@ namespace Framework.Authorization.Accounts
 
             if (input.ClientType == ClientType.WEB)
             {
-                var user = await _userRegistrationManager.RegisterAsync(
-                    input.EmailAddress,
-                    input.Password,
-                    input.FullName,
-                    input.Gender,
-                    input.IDNumber,
-                    input.BirthDate,
-                    false,
-                    AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    input.ClientType
-                );
+                var user = await SaveUserDataAsync(input, false);
 
                 var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
 
@@ -166,12 +155,19 @@ namespace Framework.Authorization.Accounts
                 {
                     if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
                     {
-                        output.CanLogin = true;
+                        ConfirmUserData(user, input);
+
                         user.IsActive = true;
                         user.IsEmailConfirmed = true;
                         user.EmailConfirmationCode = null;
 
+                        output.CanLogin = true;
+
                         await UserManager.UpdateAsync(user);
+                    }
+                    else
+                    {
+                        throw new Exception("OTP is not correct!");
                     }
                 }
 
@@ -327,6 +323,33 @@ namespace Framework.Authorization.Accounts
             }
 
             return user;
+        }
+
+        private async Task<User> SaveUserDataAsync(RegisterInput input, bool usingOTP)
+        {
+            var user = await _userRegistrationManager.RegisterAsync(
+                        input.EmailAddress,
+                        input.Password,
+                        input.FullName,
+                        input.Gender,
+                        input.IDNumber,
+                        input.BirthDate,
+                        false,
+                        usingOTP ? GenerateOTP() : AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                        input.ClientType);
+            return user;
+        }
+
+        private void ConfirmUserData(User user, RegisterInput input)
+        {
+            string[] _fullName = _userRegistrationManager.SplitedFullName(input.FullName);
+
+            user.Name = _fullName[1];
+            user.Surname = _fullName[0];
+            user.Gender = input.Gender;
+            user.IDNumber = input.IDNumber;
+            user.BirthDate = input.BirthDate;
+            user.Password = input.Password;
         }
 
         private string GenerateOTP()
