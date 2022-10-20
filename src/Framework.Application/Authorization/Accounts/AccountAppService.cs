@@ -110,8 +110,7 @@ namespace Framework.Authorization.Accounts
             {
                 if (user.IsActive)
                 {
-                    // notify
-                    throw new Exception("Your email has already been registed!");
+                    throw new UserFriendlyException("Email đã được người khác đăng ký!");
                 }
                 else
                 {
@@ -167,8 +166,12 @@ namespace Framework.Authorization.Accounts
                     }
                     else
                     {
-                        throw new Exception("OTP is not correct!");
+                        throw new UserFriendlyException("OTP không đúng!");
                     }
+                }
+                else
+                {
+                    throw new UserFriendlyException("OTP chưa được gửi!");
                 }
 
                 return output;
