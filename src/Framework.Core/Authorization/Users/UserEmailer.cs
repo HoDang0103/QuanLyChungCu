@@ -402,12 +402,11 @@ namespace Framework.Authorization.Users
                     SecureSocketOptions.StartTls
                     );
 
-                //var smtpPassword = await SettingManager.GetSettingValueAsync(Smtp.Password);
+                var smtpPassword = await SettingManager.GetSettingValueAsync(Smtp.Password);
 
                 client.Authenticate(
                     await SettingManager.GetSettingValueAsync(Smtp.UserName),
-                    //SimpleStringCipher.Instance.Decrypt(smtpPassword)
-                    "025493450"
+                    SimpleStringCipher.Instance.Decrypt(smtpPassword)
                     );
 
                 client.Send(message);
