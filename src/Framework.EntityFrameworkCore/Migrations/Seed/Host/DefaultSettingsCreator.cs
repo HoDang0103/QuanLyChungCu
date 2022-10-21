@@ -5,6 +5,8 @@ using Abp.MultiTenancy;
 using Abp.Net.Mail;
 using Microsoft.EntityFrameworkCore;
 using Framework.EntityFrameworkCore;
+using Abp.Runtime.Security;
+using Framework.MultiTenancy;
 
 namespace Framework.Migrations.Seed.Host
 {
@@ -30,8 +32,16 @@ namespace Framework.Migrations.Seed.Host
 #pragma warning restore 162
 
             //Emailing
-            AddSettingIfNotExists(EmailSettingNames.DefaultFromAddress, "admin@mydomain.com", tenantId);
-            AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "mydomain.com mailer", tenantId);
+            // Mail sinh viên vẫn còn dùng nha :( làm ơn đừng ai lấy nghịch
+            AddSettingIfNotExists(EmailSettingNames.DefaultFromAddress, "14520900@gm.uit.edu.vn", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "SE214.N12.PMCL Host", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.Host, "smtp.gmail.com", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.Port, "587", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.UserName, "14520900@gm.uit.edu.vn", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.Password, "Tvg4QWRMIvIwPuKLpqdtgg==", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.Domain, "", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.EnableSsl, "true", tenantId);
+            AddSettingIfNotExists(EmailSettingNames.Smtp.UseDefaultCredentials, "false", tenantId);
 
             //Languages
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);

@@ -19,7 +19,9 @@ using Framework.Security.Recaptcha;
 using Framework.Url;
 using Framework.Authorization.Delegation;
 using Abp.Domain.Repositories;
-
+using Abp.Net.Mail;
+using static System.Net.WebRequestMethods;
+using NPOI.SS.Formula.Functions;
 
 namespace Framework.Authorization.Accounts
 {
@@ -36,6 +38,7 @@ namespace Framework.Authorization.Accounts
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IWebUrlService _webUrlService;
         private readonly IUserDelegationManager _userDelegationManager;
+        private readonly IAbpSession _session;
 
         public AccountAppService(
             IUserEmailer userEmailer,
@@ -43,8 +46,9 @@ namespace Framework.Authorization.Accounts
             IImpersonationManager impersonationManager,
             IUserLinkManager userLinkManager,
             IPasswordHasher<User> passwordHasher,
-            IWebUrlService webUrlService, 
-            IUserDelegationManager userDelegationManager)
+            IWebUrlService webUrlService,
+            IUserDelegationManager userDelegationManager,
+            IAbpSession session)
         {
             _userEmailer = userEmailer;
             _userRegistrationManager = userRegistrationManager;
@@ -56,6 +60,7 @@ namespace Framework.Authorization.Accounts
             AppUrlService = NullAppUrlService.Instance;
             RecaptchaValidator = NullRecaptchaValidator.Instance;
             _userDelegationManager = userDelegationManager;
+            _session = session;
         }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
@@ -93,6 +98,35 @@ namespace Framework.Authorization.Accounts
             return Task.FromResult(tenantId);
         }
 
+        public async Task SendEmailActivationOTP(RegisterInput input)
+        {
+            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+
+            if (user == null)
+            {
+                user = await SaveUserDataAsync(input, true);
+            }
+            else
+            {
+                if (user.IsActive)
+                {
+                    throw new UserFriendlyException("Email đã được người khác đăng ký!");
+                }
+                else
+                {
+                    user.EmailConfirmationCode = GenerateOTP();
+                }
+            }
+
+            await _userEmailer.SendEmailActivationOTPAsync(user);
+        }
+
+        public async Task<string> MessageFromServerSide()
+        {
+            string message = AbpSession.TenantId.ToString();
+            return message;
+        }
+
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             if (UseCaptchaOnRegistration())
@@ -100,22 +134,48 @@ namespace Framework.Authorization.Accounts
                 await RecaptchaValidator.ValidateAsync(input.CaptchaResponse);
             }
 
-            var user = await _userRegistrationManager.RegisterAsync(
-                input.Name,
-                input.Surname,
-                input.EmailAddress,
-                input.UserName,
-                input.Password,
-                false,
-                AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
-            );
-
-            var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
-
-            return new RegisterOutput
+            if (input.ClientType == ClientType.WEB)
             {
-                CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
-            };
+                var user = await SaveUserDataAsync(input, false);
+
+                var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+
+                return new RegisterOutput
+                {
+                    CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
+                };
+            }
+            else // (input.ClientType == ClientType.MOBILE)
+            {
+                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+                var output = new RegisterOutput { CanLogin = false };
+
+                if (user != null)
+                {
+                    if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
+                    {
+                        ConfirmUserData(user, input);
+
+                        user.IsActive = true;
+                        user.IsEmailConfirmed = true;
+                        user.EmailConfirmationCode = null;
+
+                        output.CanLogin = true;
+
+                        await UserManager.UpdateAsync(user);
+                    }
+                    else
+                    {
+                        throw new UserFriendlyException("OTP không đúng!");
+                    }
+                }
+                else
+                {
+                    throw new UserFriendlyException("OTP chưa được gửi!");
+                }
+
+                return output;
+            }
         }
 
         public async Task SendPasswordResetCode(SendPasswordResetCodeInput input)
@@ -177,6 +237,8 @@ namespace Framework.Authorization.Accounts
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
 
+            user.IsActive = true;
+
             await UserManager.UpdateAsync(user);
         }
 
@@ -230,7 +292,8 @@ namespace Framework.Authorization.Accounts
 
         private bool UseCaptchaOnRegistration()
         {
-            return SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration);
+            //return SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.UseCaptchaOnRegistration);
+            return false;   // set false luôn khỏi setting cái gì hết
         }
 
         private async Task<Tenant> GetActiveTenantAsync(int tenantId)
@@ -263,6 +326,40 @@ namespace Framework.Authorization.Accounts
             }
 
             return user;
+        }
+
+        private async Task<User> SaveUserDataAsync(RegisterInput input, bool usingOTP)
+        {
+            var user = await _userRegistrationManager.RegisterAsync(
+                        input.EmailAddress,
+                        input.Password,
+                        input.FullName,
+                        input.Gender,
+                        input.IDNumber,
+                        input.BirthDate,
+                        false,
+                        usingOTP ? GenerateOTP() : AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
+                        input.ClientType);
+            return user;
+        }
+
+        private void ConfirmUserData(User user, RegisterInput input)
+        {
+            string[] _fullName = _userRegistrationManager.SplitedFullName(input.FullName);
+
+            user.Name = _fullName[1];
+            user.Surname = _fullName[0];
+            user.Gender = input.Gender;
+            user.IDNumber = input.IDNumber;
+            user.BirthDate = input.BirthDate;
+            user.Password = input.Password;
+        }
+
+        private string GenerateOTP()
+        {
+            // generate a random 6-digit otp
+            Random _r = new Random();
+            return SimpleStringCipher.Instance.Encrypt(_r.Next(100000, 1000000).ToString());
         }
     }
 }

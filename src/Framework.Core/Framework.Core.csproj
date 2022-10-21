@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Framework.Application.Shared\Framework.Application.Shared.csproj" />
     <ProjectReference Include="..\Framework.Core.Shared\Framework.Core.Shared.csproj" />
   </ItemGroup>
 

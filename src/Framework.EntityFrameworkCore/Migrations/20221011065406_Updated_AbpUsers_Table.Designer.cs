@@ -4,14 +4,16 @@ using Framework.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Framework.Migrations
 {
     [DbContext(typeof(FrameworkDbContext))]
-    partial class FrameworkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221011065406_Updated_AbpUsers_Table")]
+    partial class Updated_AbpUsers_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1574,8 +1576,8 @@ namespace Framework.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
 
                     b.Property<string>("GoogleAuthenticatorKey")
                         .HasColumnType("nvarchar(max)");
