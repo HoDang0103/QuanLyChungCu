@@ -123,7 +123,7 @@ namespace Framework.Authorization.Accounts
 
         public async Task<string> MessageFromServerSide()
         {
-            string message = AbpSession.TenantId.ToString();
+            string message = SimpleStringCipher.Instance.Decrypt("123456");
             return message;
         }
 
@@ -154,15 +154,9 @@ namespace Framework.Authorization.Accounts
                 {
                     if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
                     {
-                        ConfirmUserData(user, input);
-
-                        user.IsActive = true;
-                        user.IsEmailConfirmed = true;
-                        user.EmailConfirmationCode = null;
+                        await ConfirmUserData(user, input);
 
                         output.CanLogin = true;
-
-                        await UserManager.UpdateAsync(user);
                     }
                     else
                     {
@@ -343,7 +337,7 @@ namespace Framework.Authorization.Accounts
             return user;
         }
 
-        private void ConfirmUserData(User user, RegisterInput input)
+        private async Task ConfirmUserData(User user, RegisterInput input)
         {
             string[] _fullName = _userRegistrationManager.SplitedFullName(input.FullName);
 
@@ -352,7 +346,19 @@ namespace Framework.Authorization.Accounts
             user.Gender = input.Gender;
             user.IDNumber = input.IDNumber;
             user.BirthDate = input.BirthDate;
-            user.Password = input.Password;
+
+            user.IsActive = true;
+            user.IsEmailConfirmed = true;
+            user.EmailConfirmationCode = null;
+
+            CheckErrors(await UserManager.UpdateAsync(user));
+
+            if (!input.Password.IsNullOrEmpty())
+            {
+                await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
+                CheckErrors(await UserManager.ChangePasswordAsync(user, input.Password));
+                await CurrentUnitOfWork.SaveChangesAsync();
+            }
         }
 
         private string GenerateOTP()
