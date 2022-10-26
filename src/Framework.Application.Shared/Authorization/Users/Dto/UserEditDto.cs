@@ -20,7 +20,7 @@ namespace Framework.Authorization.Users.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
-        //[Required]
+        [Required]
         [StringLength(AbpUserBase.MaxSurnameLength + AbpUserBase.MaxNameLength)]
         public string FullName { get; set; }
 
@@ -35,11 +35,11 @@ namespace Framework.Authorization.Users.Dto
         [StringLength(UserConsts.MaxPhoneNumberLength)]
         public string PhoneNumber { get; set; }
 
-        //[Required]
+        [Required]
         [MaxLength(UserConsts.MaxGenderLength)]
         public string Gender { get; set; }
 
-        //[Required]
+        [Required]
         [MaxLength(UserConsts.MaxIDNumberLength)]
         public string IDNumber { get; set; }
 
