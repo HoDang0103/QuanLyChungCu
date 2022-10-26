@@ -37,6 +37,8 @@ namespace Framework.Authorization.Users.Profile.Dto
         public DateTime BirthDate { get; set; }
         public virtual bool IsPhoneNumberConfirmed { get; set; }
 
+        public string OTP { get; set; }
+
         public string Timezone { get; set; }
 
         public string QrCodeSetupImageUrl { get; set; }
