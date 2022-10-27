@@ -19,7 +19,7 @@ namespace Framework.Authorization.Users
         public virtual string Gender { get; set; }
 
         [Required]
-        [MaxLength(UserConsts.MaxIDNumberLength)]
+        [StringLength(UserConsts.MaxIDNumberLength, MinimumLength = 9)]
         public virtual string IDNumber { get; set; }
 
         // override FullName, change it into vietnamese FullName
