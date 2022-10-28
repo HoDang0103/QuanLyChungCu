@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
 
 namespace Framework.Authorization.Users.Profile.Dto
@@ -24,6 +25,16 @@ namespace Framework.Authorization.Users.Profile.Dto
         [StringLength(UserConsts.MaxPhoneNumberLength)]
         public string PhoneNumber { get; set; }
 
+        [Required]
+        [MaxLength(UserConsts.MaxGenderLength)]
+        public string Gender { get; set; }
+
+        [Required]
+        [MaxLength(UserConsts.MaxIDNumberLength)]
+        public string IDNumber { get; set; }
+
+        [Required]
+        public DateTime BirthDate { get; set; }
         public virtual bool IsPhoneNumberConfirmed { get; set; }
 
         public string Timezone { get; set; }

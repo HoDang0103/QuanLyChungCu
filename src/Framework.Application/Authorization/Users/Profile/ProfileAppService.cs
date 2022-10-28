@@ -26,6 +26,7 @@ using Framework.Net.Sms;
 using Framework.Security;
 using Framework.Storage;
 using Framework.Timing;
+using Abp.Runtime.Security;
 
 namespace Framework.Authorization.Users.Profile
 {
@@ -54,6 +55,7 @@ namespace Framework.Authorization.Users.Profile
             ITempFileCacheManager tempFileCacheManager,
             IBackgroundJobManager backgroundJobManager,
             ProfileImageServiceFactory profileImageServiceFactory)
+            
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -64,6 +66,7 @@ namespace Framework.Authorization.Users.Profile
             _tempFileCacheManager = tempFileCacheManager;
             _backgroundJobManager = backgroundJobManager;
             _profileImageServiceFactory = profileImageServiceFactory;
+            
         }
 
         [DisableAuditing]
@@ -129,6 +132,7 @@ namespace Framework.Authorization.Users.Profile
 
         public async Task VerifySmsCode(VerifySmsCodeInputDto input)
         {
+           
             var cacheKey = AbpSession.ToUserIdentifier().ToString();
             var cash = await _cacheManager.GetSmsVerificationCodeCache().GetOrDefaultAsync(cacheKey);
 
@@ -186,6 +190,8 @@ namespace Framework.Authorization.Users.Profile
                         TimingSettingNames.TimeZone, input.Timezone);
                 }
             }
+
+
         }
 
         public async Task ChangePassword(ChangePasswordInput input)
