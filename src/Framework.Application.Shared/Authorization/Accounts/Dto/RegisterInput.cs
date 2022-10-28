@@ -51,6 +51,9 @@ namespace Framework.Authorization.Accounts.Dto
         [Required]
         public DateTime BirthDate { get; set; }
 
+        [StringLength(15)]
+        public string ApartmentId { get; set; }
+
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         [DisableAuditing]

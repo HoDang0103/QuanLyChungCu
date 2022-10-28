@@ -29,6 +29,9 @@ namespace Framework.Authorization.Users
         [Required]
         public virtual DateTime BirthDate { get; set; }
 
+        [MaxLength(15)]
+        public virtual string ApartmentId { get; set; }
+
         /*----- Default -----*/
         public virtual Guid? ProfilePictureId { get; set; }
 
