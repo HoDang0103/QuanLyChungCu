@@ -331,6 +331,7 @@ namespace Framework.Authorization.Accounts
                         input.Gender,
                         input.IDNumber,
                         input.BirthDate,
+                        input.ApartmentId,
                         false,
                         usingOTP ? GenerateOTP() : AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
                         input.ClientType);
@@ -346,6 +347,7 @@ namespace Framework.Authorization.Accounts
             user.Gender = input.Gender;
             user.IDNumber = input.IDNumber;
             user.BirthDate = input.BirthDate;
+            user.ApartmentId = input.ApartmentId;
 
             user.IsActive = true;
             user.IsEmailConfirmed = true;

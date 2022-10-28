@@ -62,6 +62,7 @@ namespace Framework.Authorization.Users
             string gender,
             string idNumber,
             DateTime birthDate,
+            string apartmentId,
             bool isEmailConfirmed,
             string emailActivationString,
             ClientType clientType)
@@ -89,6 +90,7 @@ namespace Framework.Authorization.Users
                 Gender = gender,
                 IDNumber = idNumber,
                 BirthDate = birthDate,
+                ApartmentId = apartmentId,
             };
 
             if (clientType == ClientType.WEB)
