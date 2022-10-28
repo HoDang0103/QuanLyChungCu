@@ -43,6 +43,9 @@ using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Framework.Web.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace Framework.Web.Startup
 {
@@ -61,6 +64,9 @@ namespace Framework.Web.Startup
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<ApartmentDb>(options =>
+                options.UseSqlServer("Default"));
             //MVC
             services.AddControllersWithViews(options =>
             {
@@ -68,6 +74,7 @@ namespace Framework.Web.Startup
             }).AddNewtonsoftJson();
 
             services.AddSignalR();
+           
 
             //Configure CORS for angular2 UI
             services.AddCors(options =>
