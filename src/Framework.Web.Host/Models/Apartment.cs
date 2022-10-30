@@ -12,8 +12,8 @@ namespace Framework.Web.Models
         public int AmountOfRooms { get; set; }
         public string BuildingId { get; set; }
         public int Floor { get; set; }
-        public double Area { get; set; }
-        public double Price { get; set; }
+        public float Area { get; set; }
+        public float Price { get; set; }
         public string Status { get; set; }
     }
 }

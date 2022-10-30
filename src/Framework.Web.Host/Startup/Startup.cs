@@ -46,6 +46,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Framework.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using Abp.Dependency;
 
 namespace Framework.Web.Startup
 {
@@ -66,7 +67,9 @@ namespace Framework.Web.Startup
         {
 
             services.AddDbContext<ApartmentDb>(options =>
-                options.UseSqlServer("Default"));
+            {
+                options.UseSqlServer(_appConfiguration.GetConnectionString("Default"));
+            });
             //MVC
             services.AddControllersWithViews(options =>
             {
@@ -173,6 +176,9 @@ namespace Framework.Web.Startup
             //Configure Abp and Dependency Injection
             return services.AddAbp<FrameworkWebHostModule>(options =>
             {
+                var @class = typeof(FrameworkWebHostModule).Assembly.GetType("Framework.Web.Controllers.ApartmentsController");
+                options.IocManager.Register(@class, DependencyLifeStyle.Transient);
+
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig(_hostingEnvironment.IsDevelopment()
@@ -183,6 +189,8 @@ namespace Framework.Web.Startup
                 options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"),
                     SearchOption.AllDirectories);
             });
+            
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
