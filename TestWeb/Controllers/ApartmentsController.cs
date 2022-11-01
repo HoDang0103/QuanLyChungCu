@@ -56,7 +56,7 @@ namespace TestWeb.Controllers
             await _context.AbpApartments.AddAsync(Apartment);
             await _context.SaveChangesAsync();
 
-            return Ok(User);
+            return Ok(Apartment);
         }
 
         // PUT api/<ApartmentsController>/5
