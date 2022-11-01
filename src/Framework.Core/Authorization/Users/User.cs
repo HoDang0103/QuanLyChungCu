@@ -22,6 +22,8 @@ namespace Framework.Authorization.Users
         [MaxLength(UserConsts.MaxIDNumberLength)]
         public virtual string IDNumber { get; set; }
 
+
+
         // override FullName, change it into vietnamese FullName
         [NotMapped]
         public override string FullName { get { return this.Surname + " " + this.Name; } }

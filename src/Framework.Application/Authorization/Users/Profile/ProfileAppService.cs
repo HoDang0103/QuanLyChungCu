@@ -182,7 +182,6 @@ namespace Framework.Authorization.Users.Profile
             {
                 if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
                 {
-
                     user.IsActive = true;
                     user.IsEmailConfirmed = true;
                     user.EmailConfirmationCode = null;
@@ -227,8 +226,7 @@ namespace Framework.Authorization.Users.Profile
             var user = await UserManager.FindByEmailAsync(input.EmailAddress);
 
             user.EmailConfirmationCode = GenerateOTP();
-            
-            
+            input.OTP = user.EmailConfirmationCode;
 
             await _userEmailer.SendEmailActivationOTPAsync(user);
         }
