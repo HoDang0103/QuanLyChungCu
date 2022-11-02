@@ -33,6 +33,7 @@ namespace Framework.Authorization.Users.Profile.Dto
         [MaxLength(UserConsts.MaxIDNumberLength)]
         public string IDNumber { get; set; }
 
+        public string ApartmentId { get; set; }
 
         [Required]
         public DateTime BirthDate { get; set; }
