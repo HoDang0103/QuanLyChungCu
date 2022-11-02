@@ -104,7 +104,7 @@ namespace Framework.Authorization.Accounts
 
             if (user == null)
             {
-                user = await SaveUserDataAsync(input, true);
+                user = await SaveUserDataAsync(input);
             }
             else
             {
@@ -121,12 +121,6 @@ namespace Framework.Authorization.Accounts
             await _userEmailer.SendEmailActivationOTPAsync(user);
         }
 
-        public async Task<string> MessageFromServerSide()
-        {
-            string message = SimpleStringCipher.Instance.Decrypt("123456");
-            return message;
-        }
-
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
             if (UseCaptchaOnRegistration())
@@ -134,42 +128,28 @@ namespace Framework.Authorization.Accounts
                 await RecaptchaValidator.ValidateAsync(input.CaptchaResponse);
             }
 
-            if (input.ClientType == ClientType.WEB)
+            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+            var output = new RegisterOutput { CanLogin = false };
+
+            if (user != null)
             {
-                var user = await SaveUserDataAsync(input, false);
-
-                var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
-
-                return new RegisterOutput
+                if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
                 {
-                    CanLogin = user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin)
-                };
-            }
-            else // (input.ClientType == ClientType.MOBILE)
-            {
-                var user = await UserManager.FindByEmailAsync(input.EmailAddress);
-                var output = new RegisterOutput { CanLogin = false };
+                    await ConfirmUserData(user, input);
 
-                if (user != null)
-                {
-                    if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
-                    {
-                        await ConfirmUserData(user, input);
-
-                        output.CanLogin = true;
-                    }
-                    else
-                    {
-                        throw new UserFriendlyException("OTP không đúng!");
-                    }
+                    output.CanLogin = true;
                 }
                 else
                 {
-                    throw new UserFriendlyException("OTP chưa được gửi!");
+                    throw new UserFriendlyException("OTP không đúng!");
                 }
-
-                return output;
             }
+            else
+            {
+                throw new UserFriendlyException("OTP chưa được gửi!");
+            }
+
+            return output;
         }
 
         public async Task SendPasswordResetCode(SendPasswordResetCodeInput input)
@@ -322,7 +302,7 @@ namespace Framework.Authorization.Accounts
             return user;
         }
 
-        private async Task<User> SaveUserDataAsync(RegisterInput input, bool usingOTP)
+        private async Task<User> SaveUserDataAsync(RegisterInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(
                         input.EmailAddress,
@@ -333,8 +313,7 @@ namespace Framework.Authorization.Accounts
                         input.BirthDate,
                         input.ApartmentId,
                         false,
-                        usingOTP ? GenerateOTP() : AppUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                        input.ClientType);
+                        GenerateOTP());
             return user;
         }
 
@@ -349,7 +328,7 @@ namespace Framework.Authorization.Accounts
             user.BirthDate = input.BirthDate;
             user.ApartmentId = input.ApartmentId;
 
-            user.IsActive = true;
+            user.IsActive = true;   // maybe changed in next sprint
             user.IsEmailConfirmed = true;
             user.EmailConfirmationCode = null;
 
