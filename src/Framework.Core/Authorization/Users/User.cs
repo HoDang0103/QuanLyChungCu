@@ -22,6 +22,9 @@ namespace Framework.Authorization.Users
         [StringLength(UserConsts.MaxIDNumberLength, MinimumLength = 9)]
         public virtual string IDNumber { get; set; }
 
+        public virtual string ApartmentId { get; set; }
+
+
         // override FullName, change it into vietnamese FullName
         [NotMapped]
         public override string FullName { get { return this.Surname + " " + this.Name; } }
