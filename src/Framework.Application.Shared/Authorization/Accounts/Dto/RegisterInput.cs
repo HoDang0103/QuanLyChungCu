@@ -10,14 +10,8 @@ using Framework.Validation;
 
 namespace Framework.Authorization.Accounts.Dto
 {
-    public enum ClientType
-    { 
-        WEB, MOBILE
-    }
     public class RegisterInput : IValidatableObject
     {
-        [Required]
-        public ClientType ClientType { get; set; }
         public string OTP { get; set; }
 
         [StringLength(AbpUserBase.MaxNameLength)]
@@ -88,7 +82,10 @@ namespace Framework.Authorization.Accounts.Dto
                 }
             }
 
-            if (!(EmailAddress.Contains("@gmail.com")))
+            if (!(
+                (EmailAddress.Contains("@gmail.com"))
+                || (EmailAddress.Contains("@yopmail.com"))  // để test, sau này bỏ
+                ))
             {
                 yield return new ValidationResult("Vui lòng nhập email đúng quy định. Ví dụ prefix_gi_cung_duoc_nhung_domain_phai_la@gmail.com");
             }

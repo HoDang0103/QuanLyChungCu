@@ -64,8 +64,7 @@ namespace Framework.Authorization.Users
             DateTime birthDate,
             string apartmentId,
             bool isEmailConfirmed,
-            string emailActivationString,
-            ClientType clientType)
+            string emailActivationString)
         {
             CheckForTenant();
             CheckSelfRegistrationIsEnabled();
@@ -93,16 +92,8 @@ namespace Framework.Authorization.Users
                 ApartmentId = apartmentId,
             };
 
-            if (clientType == ClientType.WEB)
-            {
-                user.IsActive = isNewRegisteredUserActiveByDefault;
-                user.EmailConfirmationCode = emailActivationString;
-            }
-            else // (clientType == ClientType.MOBILE)
-            {
-                user.IsActive = isNewRegisteredUserActiveByDefault;
-                user.EmailConfirmationCode = emailActivationString;
-            };
+            user.IsActive = isNewRegisteredUserActiveByDefault;
+            user.EmailConfirmationCode = emailActivationString;
 
             user.SetNormalizedNames();
 
@@ -115,13 +106,6 @@ namespace Framework.Authorization.Users
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
             CheckErrors(await _userManager.CreateAsync(user, plainPassword));
             await CurrentUnitOfWork.SaveChangesAsync();
-
-            /*  To send Email activation link if needed */
-            if (!user.IsEmailConfirmed && clientType == ClientType.WEB)
-            {
-                user.SetNewEmailConfirmationCode();
-                await _userEmailer.SendEmailActivationLinkAsync(user, emailActivationString);
-            }
 
             //Notifications
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());

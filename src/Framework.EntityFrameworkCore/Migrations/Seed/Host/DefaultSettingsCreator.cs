@@ -44,7 +44,7 @@ namespace Framework.Migrations.Seed.Host
             AddSettingIfNotExists(EmailSettingNames.Smtp.UseDefaultCredentials, "false", tenantId);
 
             //Languages
-            AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
+            AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "vi", tenantId);
         }
 
         private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
