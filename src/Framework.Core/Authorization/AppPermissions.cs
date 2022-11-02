@@ -39,6 +39,8 @@
 
         public const string Pages_Administration_AuditLogs = "Pages.Administration.AuditLogs";
 
+        public const string Pages_Administration_apartment = "Pages.Administration.apartment";
+
         public const string Pages_Administration_OrganizationUnits = "Pages.Administration.OrganizationUnits";
         public const string Pages_Administration_OrganizationUnits_ManageOrganizationTree = "Pages.Administration.OrganizationUnits.ManageOrganizationTree";
         public const string Pages_Administration_OrganizationUnits_ManageMembers = "Pages.Administration.OrganizationUnits.ManageMembers";

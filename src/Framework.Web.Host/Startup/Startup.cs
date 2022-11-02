@@ -77,7 +77,7 @@ namespace Framework.Web.Startup
             }).AddNewtonsoftJson();
 
             services.AddSignalR();
-           
+
 
             //Configure CORS for angular2 UI
             services.AddCors(options =>
@@ -125,7 +125,7 @@ namespace Framework.Web.Startup
                 //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
                 services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo() {Title = "Framework API", Version = "v1"});
+                    options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Framework API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.ParameterFilter<SwaggerEnumParameterFilter>();
                     options.SchemaFilter<SwaggerEnumSchemaFilter>();
@@ -189,7 +189,7 @@ namespace Framework.Web.Startup
                 options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"),
                     SearchOption.AllDirectories);
             });
-            
+
 
         }
 
@@ -278,7 +278,7 @@ namespace Framework.Web.Startup
                         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                     });
                 }
-                
+
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
             });
 
