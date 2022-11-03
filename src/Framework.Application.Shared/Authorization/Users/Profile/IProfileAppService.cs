@@ -36,5 +36,7 @@ namespace Framework.Authorization.Users.Profile
         Task VerifySmsCode(VerifySmsCodeInputDto input);
 
         Task PrepareCollectedData();
+
+        
     }
 }

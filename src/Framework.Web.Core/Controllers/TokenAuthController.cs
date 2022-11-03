@@ -47,7 +47,6 @@ using Framework.Web.Authentication.External;
 using Framework.Web.Common;
 using Framework.Authorization.Delegation;
 using StackExchange.Redis;
-using ClientType = Framework.Authorization.Accounts.Dto.ClientType;
 using Role = Framework.Authorization.Roles.Role;
 
 namespace Framework.Web.Controllers
@@ -577,9 +576,9 @@ namespace Framework.Web.Controllers
                 "",
                 "",
                 new DateTime(),
+                "",
                 true,
-                null,
-                ClientType.WEB
+                null
             );
 
             user.Logins = new List<UserLogin>

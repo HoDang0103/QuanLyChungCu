@@ -26,6 +26,10 @@ using Framework.Net.Sms;
 using Framework.Security;
 using Framework.Storage;
 using Framework.Timing;
+using Abp.Runtime.Security;
+using Framework.Authorization.Accounts.Dto;
+using Framework.Url;
+using System.Diagnostics;
 
 namespace Framework.Authorization.Users.Profile
 {
@@ -42,6 +46,7 @@ namespace Framework.Authorization.Users.Profile
         private readonly ITempFileCacheManager _tempFileCacheManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly ProfileImageServiceFactory _profileImageServiceFactory;
+        private readonly IUserEmailer _userEmailer;
 
         public ProfileAppService(
             IAppFolders appFolders,
@@ -53,7 +58,9 @@ namespace Framework.Authorization.Users.Profile
             ICacheManager cacheManager,
             ITempFileCacheManager tempFileCacheManager,
             IBackgroundJobManager backgroundJobManager,
-            ProfileImageServiceFactory profileImageServiceFactory)
+            ProfileImageServiceFactory profileImageServiceFactory,
+            IUserEmailer _userEmailer)
+            
         {
             _binaryObjectManager = binaryObjectManager;
             _timeZoneService = timezoneService;
@@ -64,6 +71,8 @@ namespace Framework.Authorization.Users.Profile
             _tempFileCacheManager = tempFileCacheManager;
             _backgroundJobManager = backgroundJobManager;
             _profileImageServiceFactory = profileImageServiceFactory;
+            this._userEmailer = _userEmailer;
+            
         }
 
         [DisableAuditing]
@@ -71,7 +80,7 @@ namespace Framework.Authorization.Users.Profile
         {
             var user = await GetCurrentUserAsync();
             var userProfileEditDto = ObjectMapper.Map<CurrentUserProfileEditDto>(user);
-
+            
             userProfileEditDto.QrCodeSetupImageUrl = user.GoogleAuthenticatorKey != null
                 ? _googleTwoFactorAuthenticateService.GenerateSetupCode("Framework",
                     user.EmailAddress, user.GoogleAuthenticatorKey, 300, 300).QrCodeSetupImageUrl
@@ -129,6 +138,7 @@ namespace Framework.Authorization.Users.Profile
 
         public async Task VerifySmsCode(VerifySmsCodeInputDto input)
         {
+           
             var cacheKey = AbpSession.ToUserIdentifier().ToString();
             var cash = await _cacheManager.GetSmsVerificationCodeCache().GetOrDefaultAsync(cacheKey);
 
@@ -158,7 +168,7 @@ namespace Framework.Authorization.Users.Profile
         public async Task UpdateCurrentUserProfile(CurrentUserProfileEditDto input)
         {
             var user = await GetCurrentUserAsync();
-
+            
             if (user.PhoneNumber != input.PhoneNumber)
             {
                 input.IsPhoneNumberConfirmed = false;
@@ -166,6 +176,28 @@ namespace Framework.Authorization.Users.Profile
             else if (user.IsPhoneNumberConfirmed)
             {
                 input.IsPhoneNumberConfirmed = true;
+            }
+
+
+            if (user != null)
+            {
+                if (input.OTP.Equals(SimpleStringCipher.Instance.Decrypt(user.EmailConfirmationCode)))
+                {
+                    user.IsActive = true;
+                    user.IsEmailConfirmed = true;
+                    user.EmailConfirmationCode = null;
+
+
+                    await UserManager.UpdateAsync(user);
+                }
+                else
+                {
+                    throw new UserFriendlyException("OTP không đúng!");
+                }
+            }
+            else
+            {
+                throw new UserFriendlyException("OTP chưa được gửi!");
             }
 
             ObjectMapper.Map(input, user);
@@ -186,7 +218,21 @@ namespace Framework.Authorization.Users.Profile
                         TimingSettingNames.TimeZone, input.Timezone);
                 }
             }
+
+
         }
+
+        public async Task SendEmailActivationOTP(CurrentUserProfileEditDto input)
+        {
+            var user = await UserManager.FindByEmailAsync(input.EmailAddress);
+
+            user.EmailConfirmationCode = GenerateOTP();
+            input.OTP = user.EmailConfirmationCode;
+
+            await _userEmailer.SendEmailActivationOTPAsync(user);
+        }
+
+
 
         public async Task ChangePassword(ChangePasswordInput input)
         {
@@ -385,6 +431,13 @@ namespace Framework.Authorization.Users.Profile
             }
 
             return new GetProfilePictureOutput(Convert.ToBase64String(bytes));
+        }
+
+        private string GenerateOTP()
+        {
+            // generate a random 6-digit otp
+            Random _r = new Random();
+            return SimpleStringCipher.Instance.Encrypt(_r.Next(100000, 1000000).ToString());
         }
     }
 }

@@ -35,6 +35,8 @@ namespace Framework.Web.Models.Account
 
         public DateTime BirthDate { get; set; }
 
+        public string ApartmentId { get; set; }
+
         [Required]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]

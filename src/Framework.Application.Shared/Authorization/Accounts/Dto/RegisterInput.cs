@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.ComTypes;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Extensions;
@@ -9,14 +10,8 @@ using Framework.Validation;
 
 namespace Framework.Authorization.Accounts.Dto
 {
-    public enum ClientType
-    { 
-        WEB, MOBILE
-    }
     public class RegisterInput : IValidatableObject
     {
-        [Required]
-        public ClientType ClientType { get; set; }
         public string OTP { get; set; }
 
         [StringLength(AbpUserBase.MaxNameLength)]
@@ -45,11 +40,13 @@ namespace Framework.Authorization.Accounts.Dto
         public string Gender { get; set; }
 
         [Required]
-        [MaxLength(UserConsts.MaxIDNumberLength)]
         public string IDNumber { get; set; }
 
         [Required]
         public DateTime BirthDate { get; set; }
+
+        [StringLength(15)]
+        public string ApartmentId { get; set; }
 
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
@@ -67,6 +64,30 @@ namespace Framework.Authorization.Accounts.Dto
                 {
                     yield return new ValidationResult("Username cannot be an email address unless it's same with your email address !");
                 }
+            }
+
+            if (!(IDNumber.Length == 9 || IDNumber.Length == 12))
+            {
+                yield return new ValidationResult("Vui lòng nhập 9 số đối với CMND hoặc 12 số đối với CCCD");
+            }
+            else
+            {
+                foreach (char c in IDNumber)
+                {
+                    if (c < '0' || c > '9')
+                    {
+                        yield return new ValidationResult("CMND hoặc CCCD không hợp lệ");
+                        break;
+                    }
+                }
+            }
+
+            if (!(
+                (EmailAddress.Contains("@gmail.com"))
+                || (EmailAddress.Contains("@yopmail.com"))  // để test, sau này bỏ
+                ))
+            {
+                yield return new ValidationResult("Vui lòng nhập email đúng quy định. Ví dụ prefix_gi_cung_duoc_nhung_domain_phai_la@gmail.com");
             }
         }
     }

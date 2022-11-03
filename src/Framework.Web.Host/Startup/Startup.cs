@@ -43,6 +43,10 @@ using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Framework.Web.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using Abp.Dependency;
 
 namespace Framework.Web.Startup
 {
@@ -61,6 +65,11 @@ namespace Framework.Web.Startup
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<ApartmentDb>(options =>
+            {
+                options.UseSqlServer(_appConfiguration.GetConnectionString("Default"));
+            });
             //MVC
             services.AddControllersWithViews(options =>
             {
@@ -68,6 +77,7 @@ namespace Framework.Web.Startup
             }).AddNewtonsoftJson();
 
             services.AddSignalR();
+
 
             //Configure CORS for angular2 UI
             services.AddCors(options =>
@@ -115,7 +125,7 @@ namespace Framework.Web.Startup
                 //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
                 services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo() {Title = "Framework API", Version = "v1"});
+                    options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Framework API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.ParameterFilter<SwaggerEnumParameterFilter>();
                     options.SchemaFilter<SwaggerEnumSchemaFilter>();
@@ -166,6 +176,9 @@ namespace Framework.Web.Startup
             //Configure Abp and Dependency Injection
             return services.AddAbp<FrameworkWebHostModule>(options =>
             {
+                var @class = typeof(FrameworkWebHostModule).Assembly.GetType("Framework.Web.Controllers.ApartmentsController");
+                options.IocManager.Register(@class, DependencyLifeStyle.Transient);
+
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig(_hostingEnvironment.IsDevelopment()
@@ -176,6 +189,8 @@ namespace Framework.Web.Startup
                 options.PlugInSources.AddFolder(Path.Combine(_hostingEnvironment.WebRootPath, "Plugins"),
                     SearchOption.AllDirectories);
             });
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -263,7 +278,7 @@ namespace Framework.Web.Startup
                         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                     });
                 }
-                
+
                 app.ApplicationServices.GetRequiredService<IAbpAspNetCoreConfiguration>().EndpointConfiguration.ConfigureAllEndpoints(endpoints);
             });
 

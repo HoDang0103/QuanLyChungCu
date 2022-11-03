@@ -14,15 +14,15 @@ namespace Framework.Authorization
                     return new Exception("Don't call this method with a success result!");
                 case AbpLoginResultType.InvalidUserNameOrEmailAddress:
                 case AbpLoginResultType.InvalidPassword:
-                    return new AbpAuthorizationException(L("InvalidUserNameOrPassword"));
+                    return new AbpAuthorizationException("Email hoặc mật khẩu không chính xác");//L("InvalidUserNameOrPassword"));
                 case AbpLoginResultType.InvalidTenancyName:
                     return new AbpAuthorizationException(L("ThereIsNoTenantDefinedWithName{0}", tenancyName));
                 case AbpLoginResultType.TenantIsNotActive:
                     return new AbpAuthorizationException(L("TenantIsNotActive", tenancyName));
                 case AbpLoginResultType.UserIsNotActive:
-                    return new AbpAuthorizationException(L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress));
+                    return new AbpAuthorizationException("Tài khoản chưa được kích hoạt");//L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress));
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
-                    return new AbpAuthorizationException(L("UserEmailIsNotConfirmedAndCanNotLogin"));
+                    return new AbpAuthorizationException("Email chưa xác thực");//L("UserEmailIsNotConfirmedAndCanNotLogin"));
                 case AbpLoginResultType.LockedOut:
                     return new AbpAuthorizationException(L("UserLockedOutMessage"));
                 default: //Can not fall to default actually. But other result types can be added in the future and we may forget to handle it
@@ -39,15 +39,15 @@ namespace Framework.Authorization
                     throw new Exception("Don't call this method with a success result!");
                 case AbpLoginResultType.InvalidUserNameOrEmailAddress:
                 case AbpLoginResultType.InvalidPassword:
-                    return L("InvalidUserNameOrPassword");
+                    return "Email hoặc mật khẩu không chính xác";//L("InvalidUserNameOrPassword");
                 case AbpLoginResultType.InvalidTenancyName:
                     return L("ThereIsNoTenantDefinedWithName{0}", tenancyName);
                 case AbpLoginResultType.TenantIsNotActive:
                     return L("TenantIsNotActive", tenancyName);
                 case AbpLoginResultType.UserIsNotActive:
-                    return L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress);
+                    return "Tài khoản chưa được kích hoạt";//L("UserIsNotActiveAndCanNotLogin", usernameOrEmailAddress);
                 case AbpLoginResultType.UserEmailIsNotConfirmed:
-                    return L("UserEmailIsNotConfirmedAndCanNotLogin");
+                    return "Email chưa xác thực";//L("UserEmailIsNotConfirmedAndCanNotLogin");
                 case AbpLoginResultType.LockedOut:
                     return L("UserLockedOutMessage");
                 default: //Can not fall to default actually. But other result types can be added in the future and we may forget to handle it

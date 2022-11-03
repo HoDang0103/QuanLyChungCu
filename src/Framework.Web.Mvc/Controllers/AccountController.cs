@@ -471,13 +471,13 @@ namespace Framework.Web.Controllers
                 var user = await _userRegistrationManager.RegisterAsync(
                     model.EmailAddress,
                     model.Password,
-                    model.Surname + " " + model.Name,
-                    "Male",         //
-                    "Unknown",      // cái này chưa kiểu nên set mặc định vầy luôn
-                    DateTime.Now,   //
+                    model.FullName,
+                    model.Gender,
+                    model.IDNumber,
+                    model.BirthDate,
+                    model.ApartmentId,
                     false,
-                    _appUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId),
-                    ClientType.WEB  //
+                    _appUrlService.CreateEmailActivationUrlFormat(AbpSession.TenantId)
                 );
 
                 //Getting tenant-specific settings
