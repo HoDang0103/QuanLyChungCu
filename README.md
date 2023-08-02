@@ -1,14 +1,11 @@
-﻿# Nhập môn Java
+﻿# Công nghệ phần mềm chuyên sâu
 <a name="top"><a>
 ## Mục lục
 
-[Thông tin sinh viên](#info)\
 [Đề tài](#topic)\
 [Mô tả project](#project)\
 &nbsp;&nbsp;&nbsp; [Công nghệ sử dụng](#use)\
 &nbsp;&nbsp;&nbsp; [Tính năng chính](#main-feature)\
-&nbsp;&nbsp;&nbsp; [Danh sách các màn hình](#screen)\
-[Demo](#demo)
 
 ## Thông tin sinh viên <a name="info"></a>
 
