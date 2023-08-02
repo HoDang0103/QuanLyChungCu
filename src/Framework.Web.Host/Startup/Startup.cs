@@ -62,10 +62,15 @@ namespace Framework.Web.Startup
             _hostingEnvironment = env;
             _appConfiguration = env.GetAppConfiguration();
         }
-
+        
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 
+            //Service
+            services.AddDbContext<ServiceDb>(options =>
+            {
+                options.UseSqlServer(_appConfiguration.GetConnectionString("Default"));
+            });
             services.AddDbContext<ApartmentDb>(options =>
             {
                 options.UseSqlServer(_appConfiguration.GetConnectionString("Default"));

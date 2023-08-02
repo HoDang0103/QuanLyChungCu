@@ -1,18 +1,43 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+﻿# Nhập môn Java
+<a name="top"><a>
+## Mục lục
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+[Thông tin sinh viên](#info)\
+[Đề tài](#topic)\
+[Mô tả project](#project)\
+&nbsp;&nbsp;&nbsp; [Công nghệ sử dụng](#use)\
+&nbsp;&nbsp;&nbsp; [Tính năng chính](#main-feature)\
+&nbsp;&nbsp;&nbsp; [Danh sách các màn hình](#screen)\
+[Demo](#demo)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Thông tin sinh viên <a name="info"></a>
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Lớp: **SE214.N11.PMCL** 
+
+
+[Lên đầu trang](#top)
+## Đề tài <a name="topic"></a>
+
+Trang web quản lý chung cư
+
+## Mô tả Project <a name="project"></a>
+
+- Trang web dùng để quản lý dịch vụ và căn hộ trong chung cư.
+- Phần mềm di động để cư dân có thể đăng ký, sử dụng các dịch vụ của chung cư.
+
+### Công nghệ sử dụng <a name="use"></a>
+
+- Ngôn ngữ: C#, Dart
+- Framework: Angular, ASP.NET Core, Flutter
+
+[Lên đầu trang](#top)
+### Tính năng chính <a name="main-feature"></a>
+- Đăng nhập, đăng ký (Ban quản lý, Nhân viên, Cư dân).
+- Thêm, xóa, sửa dịch vụ(ăn uống, giữ xe,..), hóa đơn (quản lý, điện, nước,...).
+- Thống kê doanh thu.
+  
+[Lên đầu trang](#top)
+
 
 If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
 - [ASP.NET Core](https://github.com/aspnet/Home)
